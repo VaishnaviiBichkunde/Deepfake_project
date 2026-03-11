@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-header mt-4">
+    <h2>Welcome, <span class="text-gradient">{{ session.username }}</span></h2>
+    <p>Upload a file to securely analyze it for deepfake artifacts.</p>
+</div>
+
+<div class="dashboard-grid mt-4">
+    <!-- Left Panel: Uploader -->
+    <div class="upload-panel glass-panel">
+        <h3 class="panel-title"><i class="fa-solid fa-cloud-arrow-up"></i> Detection Studio</h3>
+        
+        <div class="media-tabs mt-3">
+            <button class="tab-btn active" data-type="image"><i class="fa-solid fa-image"></i> Image</button>
+            <button class="tab-btn" data-type="video"><i class="fa-solid fa-video"></i> Video</button>
+            <button class="tab-btn" data-type="audio"><i class="fa-solid fa-music"></i> Audio</button>
+        </div>
+        
+        <form id="upload-form" enctype="multipart/form-data">
+            <input type="hidden" name="media_type" id="media-type" value="image">
+            
+            <div class="drop-zone" id="drop-zone">
+                <i class="fa-solid fa-cloud-upload-alt upload-icon"></i>
+                <h4 class="mt-2">Drag & Drop file here</h4>
+                <p>or</p>
+                <label for="file-input" class="btn-outline btn-small mt-2">Browse Files</label>
+                <input type="file" id="file-input" name="file" accept=".jpg,.jpeg,.png" hidden>
+                
+                <p class="file-info mt-2" id="file-info">No file selected.</p>
+            </div>
+            
+            <button type="submit" class="btn-primary w-100 mt-4" id="analyze-btn" disabled>
+                <i class="fa-solid fa-magnifying-glass"></i> Analyze Media
+            </button>
+        </form>
+        
+        <!-- Loading State -->
+        <div id="loading-state" class="hidden mt-4 text-center">
+            <div class="spinner"></div>
+            <p class="mt-2" id="loading-text">Extracting spatial features via CNN...</p>
+            <div class="progress-bar-container mt-2">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right Panel: Results & History -->
+    <div class="results-panel glass-panel">
+        <h3 class="panel-title"><i class="fa-solid fa-chart-pie"></i> Analysis Results</h3>
+        
+        <!-- Results Container (Hidden until analyze) -->
+        <div id="result-container" class="hidden mt-3">
+            <div class="result-card">
+                <div class="result-header">
+                    <h4 id="result-label" class="result-stamp">UNKNOWN</h4>
+                </div>
+                
+                <div class="confidence-section mt-3">
+                    <p>Confidence Score</p>
+                    <div class="confidence-bar-bg">
+                        <div id="confidence-bar" class="confidence-bar-fill"></div>
+                    </div>
+                    <p id="confidence-text" class="text-right mt-1 font-bold">0%</p>
+                </div>
+                
+                <div class="details-section mt-3">
+                    <h5><i class="fa-solid fa-circle-info"></i> Model Insights</h5>
+                    <p id="result-details" class="text-sm mt-1">Waiting for details...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Initial State -->
+        <div id="empty-result" class="empty-state mt-4">
+            <i class="fa-solid fa-clipboard-question empty-icon"></i>
+            <p>Upload a file to see the analysis results here.</p>
+        </div>
+
+        <h3 class="panel-title mt-5"><i class="fa-solid fa-clock-rotate-left"></i> Recent Scans</h3>
+        <div class="history-list mt-3">
+            {% if history %}
+                {% for item in history %}
+                    <div class="history-item">
+                        <div class="history-icon">
+                            {% if item.media_type == 'image' %}
+                                <i class="fa-solid fa-image"></i>
+                            {% elif item.media_type == 'video' %}
+                                <i class="fa-solid fa-video"></i>
+                            {% elif item.media_type == 'audio' %}
+                                <i class="fa-solid fa-music"></i>
+                            {% endif %}
+                        </div>
+                        <div class="history-details">
+                            <p class="history-filename">{{ item.filename }}</p>
+                            <p class="history-date">{{ item.created_at.strftime('%Y-%m-%d %H:%M') if item.created_at else 'N/A' }}</p>
+                        </div>
+                        <div class="history-badge {% if item.prediction == 'REAL' %}badge-real{% else %}badge-fake{% endif %}">
+                            {{ item.prediction }} ({{ item.confidence }}%)
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-sm text-center mt-3" style="color: #aaa;">No recent scans found.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

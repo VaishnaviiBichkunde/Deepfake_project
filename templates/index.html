@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Exposing <span class="text-gradient">Deception</span> in the Digital Era</h1>
+        <p class="hero-subtitle">Advanced machine learning techniques to detect deepfakes across images, videos, and audio. Built for scale, delivered through the cloud.</p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('register') }}" class="btn-primary btn-large">Get Started Now <i class="fa-solid fa-arrow-right"></i></a>
+            <a href="#features" class="btn-outline btn-large">Learn More</a>
+        </div>
+    </div>
+    <div class="hero-visual">
+        <div class="scanner-box">
+            <div class="scanner-image">
+                <i class="fa-regular fa-image" style="font-size: 8rem; color: rgba(255,255,255,0.2);"></i>
+            </div>
+            <div class="scanner-line"></div>
+            <div class="scanner-data">
+                <p>Authenticity Check: <span class="text-red">98% FAKE</span></p>
+                <p>Artifacts: Detected</p>
+                <p>AI Generator: GAN Model</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="features" class="features-section">
+    <h2 class="section-title">State-of-the-Art <span class="text-gradient">Detection</span></h2>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-image"></i></div>
+            <h3>Image Analysis</h3>
+            <p>Utilizing robust Convolutional Neural Networks (CNNs) to detect spatial inconsistencies and GAN artifacts in static images.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-video"></i></div>
+            <h3>Video Decoding</h3>
+            <p>Frame-by-frame extraction using OpenCV integrated with temporal sequence analysis to catch subtle facial distortions.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-microphone-lines"></i></div>
+            <h3>Audio Forensics</h3>
+            <p>Spectrogram generation via librosa to identify synthetic voice patterns using deep learning audio classifiers.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
